@@ -1,3 +1,4 @@
+import 'package:delevery_app/home.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -102,6 +103,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
                         // you'd often call a server or save the information in a database.
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const HomePage()),
                         );
                       }
                     },

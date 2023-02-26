@@ -54,8 +54,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Email is required';
-                    }else if (EmailValidator.validate(value) == false){
+                    } else if (EmailValidator.validate(value) == false) {
                       return 'Invalid email format';
+                    } else if (value != "user@gmail.com") {
+                      return 'Invalid email';
                     }
                     return null;
                   },
@@ -71,8 +73,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
                 child: TextFormField(
                   validator: (value) {
-                    if (value == null || value.isEmpty ) {
+                    if (value == null || value.isEmpty) {
                       return 'Password is required';
+                    } else if (value != "123456") {
+                      return 'Wrong Password';
                     }
                     return null;
                   },
@@ -106,7 +110,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
                         );
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const HomePage()),
+                          MaterialPageRoute(
+                              builder: (context) => const HomePage()),
                         );
                       }
                     },

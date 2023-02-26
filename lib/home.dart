@@ -1,122 +1,142 @@
 import 'package:delevery_app/orderList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/percent_indicator.dart';
+
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
         backgroundColor: Colors.purple.shade700,
       ),
       body: Center(
-          child: GridView.extent(
-        primary: false,
-        padding: const EdgeInsets.all(8),
-        crossAxisSpacing: 5,
-        mainAxisSpacing: 5,
-        maxCrossAxisExtent: width / 2,
-        children: <Widget>[
-          GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => OrderList()),
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                child: Card(
-                  margin: const EdgeInsets.all(5),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        leading: Image.asset('images/pending.png'),
-                        title: const Text('19'),
-                        subtitle: const Text('Pending'),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            new Expanded(
+              child : GridView.extent(
+              primary: false,
+              padding: const EdgeInsets.all(8),
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
+              maxCrossAxisExtent: width / 2,
+              children: <Widget>[
+                GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => OrderList()),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      child: Card(
+                        margin: const EdgeInsets.all(5),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ListTile(
+                              leading: Image.asset('images/pending.png'),
+                              title: const Text('19'),
+                              subtitle: const Text('Pending'),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
+                    )),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => OrderList()),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      child: Card(
+                        margin: const EdgeInsets.all(5),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ListTile(
+                              leading: Image.asset('images/success.png'),
+                              title: const Text('9'),
+                              subtitle: const Text('Delivered'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => OrderList()),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    child: Card(
+                      margin: const EdgeInsets.all(5),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ListTile(
+                            leading: Image.asset('images/cancel.png'),
+                            title: const Text('9'),
+                            subtitle: const Text('Reported'),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              )),
-          GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => OrderList()),
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                child: Card(
-                  margin: const EdgeInsets.all(5),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        leading: Image.asset('images/success.png'),
-                        title: const Text('9'),
-                        subtitle: const Text('Delivered'),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => OrderList()),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    child: Card(
+                      margin: const EdgeInsets.all(5),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ListTile(
+                            leading: Image.asset('images/caisse.png'),
+                            title: const Text('9'),
+                            subtitle: const Text('Income'),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              )),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => OrderList()),
-              );
-            },
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              child: Card(
-                margin: const EdgeInsets.all(5),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: Image.asset('images/cancel.png'),
-                      title: const Text('9'),
-                      subtitle: const Text('Reported'),
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => OrderList()),
-              );
-            },
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              child: Card(
-                margin: const EdgeInsets.all(5),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: Image.asset('images/caisse.png'),
-                      title: const Text('9'),
-                      subtitle: const Text('Income'),
-                    ),
-                  ],
-                ),
-              ),
             ),
-          ),
-        ],
-      )),
+            new CircularPercentIndicator(
+              radius: 60.0,
+              lineWidth: 5.0,
+              percent: 0.8,
+              center: new Text("80%"),
+              progressColor: Colors.green,
+            )
+          ],
+        ),
+      ),
       drawer: const NavigationDrawer(),
     );
   }
@@ -126,7 +146,8 @@ class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Drawer(
+  Widget build(BuildContext context) =>
+      Drawer(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -135,13 +156,18 @@ class NavigationDrawer extends StatelessWidget {
         ),
       );
 
-  buildHeader(BuildContext context) => Container(
+  buildHeader(BuildContext context) =>
+      Container(
         padding: EdgeInsets.only(
-          top: MediaQuery.of(context).padding.top,
+          top: MediaQuery
+              .of(context)
+              .padding
+              .top,
         ),
       );
 
-  buildMenuItems(BuildContext context) => Column(
+  buildMenuItems(BuildContext context) =>
+      Column(
         children: [
           GestureDetector(
             onTap: () {

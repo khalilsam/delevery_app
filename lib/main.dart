@@ -1,6 +1,6 @@
 import 'package:delevery_app/home.dart';
-import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,17 +9,11 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  static const String _title = 'Delevery App';
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: _title,
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text(_title),
-        ),
         body: const MyLoginPage(),
       ),
     );
@@ -53,11 +47,11 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 child: TextFormField(
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Email is required';
+                      return 'L\'email est requis';
                     } else if (EmailValidator.validate(value) == false) {
-                      return 'Invalid email format';
+                      return 'Format d\'email invalide';
                     } else if (value != "user@gmail.com") {
-                      return 'Invalid email';
+                      return 'Email invalide';
                     }
                     return null;
                   },
@@ -74,9 +68,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 child: TextFormField(
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Password is required';
+                      return 'Mot de passe requis';
                     } else if (value != "123456") {
-                      return 'Wrong Password';
+                      return 'mot de passe erroné';
                     }
                     return null;
                   },
@@ -85,7 +79,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.person),
                     border: OutlineInputBorder(),
-                    labelText: 'Password',
+                    labelText: 'Mot de passe',
                   ),
                 ),
               ),
@@ -103,11 +97,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     onPressed: () {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
-                        );
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -117,21 +106,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     },
                   ),
                 ),
-              ),
-              Row(
-                children: <Widget>[
-                  const Text('You dont have an account?'),
-                  TextButton(
-                    child: const Text(
-                      'Register',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    onPressed: () {
-                      //signup screen
-                    },
-                  )
-                ],
-                mainAxisAlignment: MainAxisAlignment.center,
               ),
             ],
           ),

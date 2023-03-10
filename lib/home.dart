@@ -3,16 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double width = MediaQuery.of(context).size.width;
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
@@ -22,22 +19,25 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            new Expanded(
-              child : GridView.extent(
+            GridView.extent(
               primary: false,
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
               crossAxisSpacing: 5,
               mainAxisSpacing: 5,
               maxCrossAxisExtent: width / 2,
+              childAspectRatio: (1 / .5),
+              shrinkWrap: true,
               children: <Widget>[
                 GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => OrderList()),
+                        MaterialPageRoute(
+                            builder: (context) => OrderList(title: "orders")),
                       );
                     },
                     child: Container(
+                      height: 48,
                       padding: const EdgeInsets.all(4),
                       child: Card(
                         margin: const EdgeInsets.all(5),
@@ -45,7 +45,7 @@ class HomePage extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             ListTile(
-                              leading: Image.asset('images/pending.png'),
+                              leading: Image.asset('assets/images/pending.png'),
                               title: const Text('19'),
                               subtitle: const Text('Pending'),
                             ),
@@ -57,7 +57,8 @@ class HomePage extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => OrderList()),
+                        MaterialPageRoute(
+                            builder: (context) => OrderList(title: "orders")),
                       );
                     },
                     child: Container(
@@ -68,7 +69,7 @@ class HomePage extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             ListTile(
-                              leading: Image.asset('images/success.png'),
+                              leading: Image.asset('assets/images/success.png'),
                               title: const Text('9'),
                               subtitle: const Text('Delivered'),
                             ),
@@ -80,7 +81,8 @@ class HomePage extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => OrderList()),
+                      MaterialPageRoute(
+                          builder: (context) => OrderList(title: "orders")),
                     );
                   },
                   child: Container(
@@ -91,7 +93,7 @@ class HomePage extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           ListTile(
-                            leading: Image.asset('images/cancel.png'),
+                            leading: Image.asset('assets/images/cancel.png'),
                             title: const Text('9'),
                             subtitle: const Text('Reported'),
                           ),
@@ -104,7 +106,8 @@ class HomePage extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => OrderList()),
+                      MaterialPageRoute(
+                          builder: (context) => OrderList(title: "orders")),
                     );
                   },
                   child: Container(
@@ -115,7 +118,7 @@ class HomePage extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           ListTile(
-                            leading: Image.asset('images/caisse.png'),
+                            leading: Image.asset('assets/images/caisse.png'),
                             title: const Text('9'),
                             subtitle: const Text('Income'),
                           ),
@@ -126,13 +129,27 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
-            ),
-            new CircularPercentIndicator(
-              radius: 60.0,
-              lineWidth: 5.0,
-              percent: 0.8,
-              center: new Text("80%"),
-              progressColor: Colors.green,
+            Text('Performane',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: Colors.grey[800],
+                    fontWeight: FontWeight.normal,
+                    fontSize: 40)),
+            SizedBox(height: 10),
+            CircularPercentIndicator(
+              radius: 130.0,
+              animation: true,
+              animationDuration: 1200,
+              lineWidth: 15.0,
+              percent: 0.4,
+              center: new Text(
+                "40%",
+                style:
+                    new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              ),
+              circularStrokeCap: CircularStrokeCap.butt,
+              backgroundColor: Colors.blueGrey.shade600,
+              progressColor: Colors.blue.shade400,
             )
           ],
         ),
@@ -146,8 +163,7 @@ class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) =>
-      Drawer(
+  Widget build(BuildContext context) => Drawer(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -156,24 +172,20 @@ class NavigationDrawer extends StatelessWidget {
         ),
       );
 
-  buildHeader(BuildContext context) =>
-      Container(
+  buildHeader(BuildContext context) => Container(
         padding: EdgeInsets.only(
-          top: MediaQuery
-              .of(context)
-              .padding
-              .top,
+          top: MediaQuery.of(context).padding.top,
         ),
       );
 
-  buildMenuItems(BuildContext context) =>
-      Column(
+  buildMenuItems(BuildContext context) => Column(
         children: [
           GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => OrderList()),
+                MaterialPageRoute(
+                    builder: (context) => OrderList(title: "orders")),
               );
             },
             child: ListTile(
@@ -185,7 +197,8 @@ class NavigationDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => OrderList()),
+                MaterialPageRoute(
+                    builder: (context) => OrderList(title: "orders")),
               );
             },
             child: ListTile(
@@ -197,7 +210,8 @@ class NavigationDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => OrderList()),
+                MaterialPageRoute(
+                    builder: (context) => OrderList(title: "orders")),
               );
             },
             child: ListTile(
@@ -209,7 +223,8 @@ class NavigationDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => OrderList()),
+                MaterialPageRoute(
+                    builder: (context) => OrderList(title: "orders")),
               );
             },
             child: ListTile(

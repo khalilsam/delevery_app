@@ -2,20 +2,31 @@ import 'package:delevery_app/model/order.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class OrderList extends StatelessWidget {
-  OrderList({Key? key}) : super(key: key);
+class OrderList extends StatefulWidget {
+  OrderList({Key? key, required this.title}) : super(key: key);
+  final String title;
 
-  final List<Order> orders = [
-    Order("Khalil Samti", "Pc Gamer HP", 3500.00, "Rue 6023 omrane sup",
-        "27367724"),
-    Order("Habil Amri", "Imprimante epson", 4000.00, "Rue 6023 omrane sup",
-        "12345678"),
-    Order("Habil Amri", "Souris HP", 40.00, "Rue 6024 omrane sup", "87654321"),
-    Order(
-        "Habil Amri", "Clavier HP", 4000.00, "Rue 6025 omrane sup", "95862555"),
-    Order("Habil Amri", "Ecran samsung", 4000.00, "Rue 6026 omrane sup",
-        "25858588")
-  ];
+  @override
+  OrderListState createState() => new OrderListState();
+}
+
+List<Order> allOrders = [
+  Order("Khalil Samti", "Pc Gamer HP", 3500.00, "Rue 6023 omrane sup",
+      "27367724"),
+  Order("Habil Amri", "Imprimante epson", 4000.00, "Rue 6023 omrane sup",
+      "12345678"),
+  Order("Habil Amri", "Souris HP", 40.00, "Rue 6024 omrane sup", "87654321"),
+  Order("Habil Amri", "Clavier HP", 4000.00, "Rue 6025 omrane sup", "95862555"),
+  Order(
+      "Habil Amri", "Ecran samsung", 4000.00, "Rue 6026 omrane sup", "25858588")
+];
+
+class OrderListState extends State<OrderList> {
+  TextEditingController editingController = TextEditingController();
+
+  // This list holds the data for the list view
+  List<Order> orders = allOrders;
+  List<Order> suggestions = [];
 
   @override
   Widget build(BuildContext context) {
@@ -24,65 +35,113 @@ class OrderList extends StatelessWidget {
         title: const Text('Orders'),
         backgroundColor: Colors.purple.shade700,
       ),
-      body: SafeArea(
-        child: ListView.builder(
-          itemCount: orders.length,
-          itemBuilder: (context, index) => Card(
-            elevation: 6,
-            margin: const EdgeInsets.all(10),
-            child: ListTile(
-              title: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          child:  Text(orders[index].client.toString()),
+      body: Container(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                onChanged: searchOrders,
+                controller: editingController,
+                decoration: InputDecoration(
+                    labelText: "Recherche",
+                    hintText: "Recherche",
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+              ),
+            ),
+            Expanded(
+              child: orders.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: orders.length,
+                      itemBuilder: (context, index) => Card(
+                        elevation: 6,
+                        margin: const EdgeInsets.all(10),
+                        child: ListTile(
+                          title: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      child:
+                                          Text(orders[index].client.toString()),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      child: Text(
+                                          orders[index].productName.toString()),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Column(
+                                children: [
+                                  Text(orders[index].price.toString()),
+                                ],
+                              )
+                            ],
+                          ),
+                          subtitle: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(orders[index].adresse.toString()),
+                                  SizedBox(height: 10),
+                                  Text(orders[index].phoneNumber.toString())
+                                ],
+                              )
+                            ],
+                          ),
+                          trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.phone,
+                                  color: Colors.green.shade700,
+                                ),
+                                SizedBox(width: 10),
+                                Icon(
+                                  Icons.email,
+                                  color: Colors.yellow.shade700,
+                                )
+                              ]),
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          child:  Text(orders[index].productName.toString()),
-                        ),
-                      )
-
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Text(orders[index].price.toString()),
-                    ],
-                  )
-                ],
-              ),
-              subtitle: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(orders[index].adresse.toString()),
-                      Text(orders[index].phoneNumber.toString())
-                    ],
-                  )
-                ],
-              ),
-              trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(Icons.phone),
-                    SizedBox(width: 10),
-                    Icon(Icons.email)
-                  ]),
+                    )
+                  : const Text(
+                      'No results found',
+                      style: TextStyle(fontSize: 24),
+                    ),
             ),
-          ),
+          ],
         ),
       ),
     );
+  }
+
+  void searchOrders(String query) async {
+    suggestions = allOrders.where((order) {
+      final username = order.client.toLowerCase();
+      final product = order.productName.toLowerCase();
+      final phone = order.phoneNumber.toLowerCase();
+      final adresse = order.adresse.toLowerCase();
+      final input = query.toLowerCase();
+      return username.contains(input) ||
+          product.contains(input) ||
+          phone.contains(input) ||
+          adresse.contains(input);
+    }).toList();
+    setState(() => orders = suggestions);
   }
 }

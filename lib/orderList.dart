@@ -1,6 +1,8 @@
 import 'package:delevery_app/model/order.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class OrderList extends StatefulWidget {
   OrderList({Key? key, required this.title}) : super(key: key);
@@ -73,6 +75,7 @@ class OrderListState extends State<OrderList> {
                                           Text(orders[index].client.toString()),
                                     ),
                                   ),
+                                  SizedBox(height: 10),
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Container(
@@ -103,19 +106,58 @@ class OrderListState extends State<OrderList> {
                               )
                             ],
                           ),
-                          trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Icon(
+                          trailing:
+                              Row(mainAxisSize: MainAxisSize.min, children: <
+                                  Widget>[
+                            Center(
+                              child: IconButton(
+                                onPressed: () {
+                                  _callNumber(
+                                      orders[index].phoneNumber.toString());
+                                  Alert(
+                                    context: context,
+                                    type: AlertType.none,
+                                    title: "",
+                                    desc: "",
+                                    buttons: [
+                                      DialogButton(
+                                        child: Text(
+                                          "Livré",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                        ),
+                                        onPressed: () => Navigator.pop(context),
+                                        color: Color.fromRGBO(0, 179, 134, 1.0),
+                                      ),
+                                      DialogButton(
+                                        child: Text(
+                                          "Reporté",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                        ),
+                                        onPressed: () => Navigator.pop(context),
+                                        gradient: LinearGradient(colors: [
+                                          Colors.redAccent.shade700,
+                                          Colors.redAccent.shade400,
+                                        ]),
+                                      )
+                                    ],
+                                  ).show();
+                                },
+                                icon: Icon(
                                   Icons.phone,
                                   color: Colors.green.shade700,
                                 ),
-                                SizedBox(width: 10),
-                                Icon(
-                                  Icons.email,
-                                  color: Colors.yellow.shade700,
-                                )
-                              ]),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Icon(
+                              Icons.email,
+                              color: Colors.yellow.shade700,
+                            )
+                          ]),
                         ),
                       ),
                     )
@@ -143,5 +185,10 @@ class OrderListState extends State<OrderList> {
           adresse.contains(input);
     }).toList();
     setState(() => orders = suggestions);
+  }
+
+  _callNumber(String phoneNumber) async {
+    String number = phoneNumber;
+    await FlutterPhoneDirectCaller.callNumber(number);
   }
 }

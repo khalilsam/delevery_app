@@ -25,7 +25,7 @@ class HomePage extends StatelessWidget {
               crossAxisSpacing: 5,
               mainAxisSpacing: 5,
               maxCrossAxisExtent: width / 2,
-              childAspectRatio: (1 / .5),
+              childAspectRatio: (1 / .6),
               shrinkWrap: true,
               children: <Widget>[
                 GestureDetector(

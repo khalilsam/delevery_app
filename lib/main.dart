@@ -43,6 +43,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
+                  padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
+                  child: Image.asset('assets/images/logo.png')
+              ),
+              Container(
                 padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
                 child: TextFormField(
                   validator: (value) {

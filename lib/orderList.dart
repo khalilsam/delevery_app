@@ -1,7 +1,9 @@
 import 'package:delevery_app/model/order.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:flutter_phone_state/flutter_phone_state.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class OrderList extends StatefulWidget {
@@ -25,10 +27,37 @@ List<Order> allOrders = [
 
 class OrderListState extends State<OrderList> {
   TextEditingController editingController = TextEditingController();
-
+  var  _reasons = [
+    "Client injoinable",
+    "Réporté à la demande",
+    "Adresse eronnée",
+    "numéro eronnée",
+    "non contacté",
+  ];
+  var _currentReason;
   // This list holds the data for the list view
   List<Order> orders = allOrders;
   List<Order> suggestions = [];
+   List<DropdownMenuItem<String>> _dropDownMenuItems =[];
+
+
+  @override
+  void initState() {
+    _dropDownMenuItems = getDropDownMenuItems();
+    _currentReason = _dropDownMenuItems[0].value;
+    super.initState();
+  }
+
+  // here we are creating the list needed for the DropDownButton
+  List<DropdownMenuItem<String>> getDropDownMenuItems() {
+    List<DropdownMenuItem<String>> items = [];
+    for (String reason in _reasons) {
+      // here we are creating the drop down menu items, you can customize the item right here
+      // but I'll just use a simple text for this
+      items.add( DropdownMenuItem(value: reason, child: Text(reason)));
+    }
+    return items;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +104,6 @@ class OrderListState extends State<OrderList> {
                                           Text(orders[index].client.toString()),
                                     ),
                                   ),
-                                  SizedBox(height: 10),
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Container(
@@ -85,7 +113,6 @@ class OrderListState extends State<OrderList> {
                                   )
                                 ],
                               ),
-                              SizedBox(height: 10),
                               Column(
                                 children: [
                                   Text(orders[index].price.toString()),
@@ -100,64 +127,36 @@ class OrderListState extends State<OrderList> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(orders[index].adresse.toString()),
-                                  SizedBox(height: 10),
                                   Text(orders[index].phoneNumber.toString())
                                 ],
                               )
                             ],
                           ),
-                          trailing:
-                              Row(mainAxisSize: MainAxisSize.min, children: <
-                                  Widget>[
-                            Center(
-                              child: IconButton(
-                                onPressed: () {
-                                  _callNumber(
-                                      orders[index].phoneNumber.toString());
-                                  Alert(
-                                    context: context,
-                                    type: AlertType.none,
-                                    title: "",
-                                    desc: "",
-                                    buttons: [
-                                      DialogButton(
-                                        child: Text(
-                                          "Livré",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20),
-                                        ),
-                                        onPressed: () => Navigator.pop(context),
-                                        color: Color.fromRGBO(0, 179, 134, 1.0),
-                                      ),
-                                      DialogButton(
-                                        child: Text(
-                                          "Reporté",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20),
-                                        ),
-                                        onPressed: () => Navigator.pop(context),
-                                        gradient: LinearGradient(colors: [
-                                          Colors.redAccent.shade700,
-                                          Colors.redAccent.shade400,
-                                        ]),
-                                      )
-                                    ],
-                                  ).show();
-                                },
-                                icon: Icon(
-                                  Icons.phone,
-                                  color: Colors.green.shade700,
+                          trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Center(
+                                  child: IconButton(
+                                    onPressed: () {
+                                      final phoneCall =
+                                          FlutterPhoneState.startPhoneCall(
+                                              orders[index]
+                                                  .phoneNumber
+                                                  .toString());
+                                      waitForCompletion(phoneCall);
+                                    },
+                                    icon: Icon(
+                                      Icons.phone,
+                                      color: Colors.green.shade700,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Icon(
-                              Icons.email,
-                              color: Colors.yellow.shade700,
-                            )
-                          ]),
+                                SizedBox(width: 10),
+                                Icon(
+                                  Icons.email,
+                                  color: Colors.yellow.shade700,
+                                )
+                              ]),
                         ),
                       ),
                     )
@@ -190,5 +189,116 @@ class OrderListState extends State<OrderList> {
   _callNumber(String phoneNumber) async {
     String number = phoneNumber;
     await FlutterPhoneDirectCaller.callNumber(number);
+  }
+
+  void orderDelivredPopUP() {
+    Navigator.pop(context);
+    Alert(
+      context: context,
+      type: AlertType.none,
+      title: "Livré",
+      desc: "",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Confirmer",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          color: Colors.lightGreenAccent.shade700,
+        ),
+        DialogButton(
+          child: Text(
+            "Fermer",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          gradient: LinearGradient(colors: [
+            Colors.redAccent.shade700,
+            Colors.redAccent.shade400,
+          ]),
+        )
+      ],
+    ).show();
+  }
+
+  // Alert Dialog function
+  Future<void> _showAlertDialog(context) async {
+    // flutter defined function
+    return showDialog<void>(
+      context: context,
+      useRootNavigator: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+              margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    "Réporté",
+                    style: TextStyle(
+                        color: Colors.redAccent.shade700,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22),
+                  ),
+                  DropdownButtonFormField(
+                    value: _currentReason,
+                    items: _dropDownMenuItems,
+                    onChanged:(value){ changedDropDownItem(value);},
+                    onSaved:(value){ changedDropDownItem(value);},
+                  ),
+                ],
+              )),
+        );
+      },
+    );
+  }
+
+  changedDropDownItem(Object? selectedReason) {
+    print("Selected reason $selectedReason, we are going to refresh the UI");
+      setState(() {
+        _currentReason = selectedReason;
+        print("_currentReason $_currentReason, we are going to refresh the UI2");
+
+      });
+
+
+  }
+
+  waitForCompletion(PhoneCall phoneCall) async {
+    await phoneCall.done;
+    print("Call is completed");
+
+    Alert(
+      context: context,
+      type: AlertType.none,
+      title: "Commande",
+      desc: "",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Livré",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => orderDelivredPopUP(),
+          color: Color.fromRGBO(0, 179, 134, 1.0),
+        ),
+        DialogButton(
+          child: Text(
+            "Reporté",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pop(context);
+            _showAlertDialog(context);
+          }),
+          gradient: LinearGradient(colors: [
+            Colors.redAccent.shade700,
+            Colors.redAccent.shade400,
+          ]),
+        )
+      ],
+    ).show();
   }
 }

@@ -9,51 +9,77 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
         backgroundColor: Colors.purple.shade700,
       ),
       body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            GridView.extent(
-              primary: false,
-              padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 5,
-              maxCrossAxisExtent: width / 2,
-              childAspectRatio: (1 / .6),
-              shrinkWrap: true,
-              children: <Widget>[
-                GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => OrderList(title: "orders")),
-                      );
-                    },
-                    child: Container(
-                      height: 48,
-                      padding: const EdgeInsets.all(4),
-                      child: Card(
-                        margin: const EdgeInsets.all(5),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            ListTile(
-                              leading: Image.asset('assets/images/pending.png'),
-                              title: const Text('19'),
-                              subtitle: const Text('Pending'),
-                            ),
-                          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              GridView.extent(
+                primary: false,
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 5,
+                maxCrossAxisExtent: width / 2,
+                childAspectRatio: (1 / .6),
+                shrinkWrap: true,
+                children: <Widget>[
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OrderList(title: "orders")),
+                        );
+                      },
+                      child: Container(
+                        height: 48,
+                        padding: const EdgeInsets.all(4),
+                        child: Card(
+                          margin: const EdgeInsets.all(5),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              ListTile(
+                                leading:
+                                    Image.asset('assets/images/pending.png'),
+                                title: const Text('19'),
+                                subtitle: const Text('Pending'),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    )),
-                GestureDetector(
+                      )),
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OrderList(title: "orders")),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        child: Card(
+                          margin: const EdgeInsets.all(5),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              ListTile(
+                                leading:
+                                    Image.asset('assets/images/success.png'),
+                                title: const Text('9'),
+                                subtitle: const Text('Delivered'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )),
+                  GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
@@ -69,89 +95,66 @@ class HomePage extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             ListTile(
-                              leading: Image.asset('assets/images/success.png'),
+                              leading: Image.asset('assets/images/cancel.png'),
                               title: const Text('9'),
-                              subtitle: const Text('Delivered'),
+                              subtitle: const Text('Reported'),
                             ),
                           ],
                         ),
                       ),
-                    )),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => OrderList(title: "orders")),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    child: Card(
-                      margin: const EdgeInsets.all(5),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          ListTile(
-                            leading: Image.asset('assets/images/cancel.png'),
-                            title: const Text('9'),
-                            subtitle: const Text('Reported'),
-                          ),
-                        ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => OrderList(title: "orders")),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      child: Card(
+                        margin: const EdgeInsets.all(5),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ListTile(
+                              leading: Image.asset('assets/images/caisse.png'),
+                              title: const Text('9'),
+                              subtitle: const Text('Income'),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => OrderList(title: "orders")),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    child: Card(
-                      margin: const EdgeInsets.all(5),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          ListTile(
-                            leading: Image.asset('assets/images/caisse.png'),
-                            title: const Text('9'),
-                            subtitle: const Text('Income'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Text('Performane',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                    color: Colors.grey[800],
-                    fontWeight: FontWeight.normal,
-                    fontSize: 40)),
-            SizedBox(height: 10),
-            CircularPercentIndicator(
-              radius: 130.0,
-              animation: true,
-              animationDuration: 1200,
-              lineWidth: 15.0,
-              percent: 0.4,
-              center: new Text(
-                "40%",
-                style:
-                    new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                ],
               ),
-              circularStrokeCap: CircularStrokeCap.butt,
-              backgroundColor: Colors.blueGrey.shade600,
-              progressColor: Colors.blue.shade400,
-            )
-          ],
+              Text('Performane',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      color: Colors.grey[800],
+                      fontWeight: FontWeight.normal,
+                      fontSize: 40)),
+              SizedBox(height: 10),
+              CircularPercentIndicator(
+                radius: 130.0,
+                animation: true,
+                animationDuration: 1200,
+                lineWidth: 15.0,
+                percent: 0.4,
+                center: new Text(
+                  "40%",
+                  style: new TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20.0),
+                ),
+                circularStrokeCap: CircularStrokeCap.butt,
+                backgroundColor: Colors.blueGrey.shade600,
+                progressColor: Colors.blue.shade400,
+              )
+            ],
+          ),
         ),
       ),
       drawer: const NavigationDrawer(),
@@ -180,6 +183,14 @@ class NavigationDrawer extends StatelessWidget {
 
   buildMenuItems(BuildContext context) => Column(
         children: [
+          UserAccountsDrawerHeader(
+            accountName: Text('Khalil Samti'),
+            accountEmail: Text('samti.khalil@gmail.com'),
+            currentAccountPicture: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.asset('assets/images/logo.png'),
+            ),
+          ),
           GestureDetector(
             onTap: () {
               Navigator.push(

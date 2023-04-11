@@ -1,9 +1,7 @@
 import 'package:delevery_app/model/order.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:flutter_phone_state/flutter_phone_state.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class OrderList extends StatefulWidget {
@@ -16,13 +14,15 @@ class OrderList extends StatefulWidget {
 
 List<Order> allOrders = [
   Order("Khalil Samti", "Pc Gamer HP", 3500.00, "Rue 6023 omrane sup",
-      "27367724"),
+      "27367724","pending"),
   Order("Habil Amri", "Imprimante epson", 4000.00, "Rue 6023 omrane sup",
-      "12345678"),
-  Order("Habil Amri", "Souris HP", 40.00, "Rue 6024 omrane sup", "87654321"),
-  Order("Habil Amri", "Clavier HP", 4000.00, "Rue 6025 omrane sup", "95862555"),
+      "12345678","pending"),
+  Order("Habil Amri", "Souris HP", 40.00, "Rue 6024 omrane sup", "87654321","pending"),
+  Order("Habil Amri", "Clavier HP", 4000.00, "Rue 6025 omrane sup", "95862555","pending"),
   Order(
-      "Habil Amri", "Ecran samsung", 4000.00, "Rue 6026 omrane sup", "25858588")
+      "Habil Amri", "Ecran samsung", 4000.00, "Rue 6026 omrane sup", "25858588","pending"),
+  Order(
+      "foulen ben foulen", "Ecran toshiba", 3000.00, "Rue 72345 omrane sup", "123456","pending")
 ];
 
 class OrderListState extends State<OrderList> {
@@ -93,7 +93,7 @@ class OrderListState extends State<OrderList> {
               ),
             ),
             Expanded(
-              child: orders.isNotEmpty
+              child: orders.where((order) => order.status.contains('pending')).toList().isNotEmpty
                   ? ListView.builder(
                       itemCount: orders.length,
                       itemBuilder: (context, index) => Card(
@@ -148,7 +148,7 @@ class OrderListState extends State<OrderList> {
                                         children: <Widget>[
                                           ElevatedButton(
                                             onPressed: () {
-                                              orderDelivredPopUP();
+                                              orderDelivredPopUP(orders[index],index);
                                             },
                                             child: Text("Livré"),
                                             style: ElevatedButton.styleFrom(
@@ -162,7 +162,7 @@ class OrderListState extends State<OrderList> {
                                               onPressed: () {
                                                 WidgetsBinding.instance
                                                     .addPostFrameCallback((_) {
-                                                  _showReportedDialog(context);
+                                                  _showReportedDialog(context,orders[index],index);
                                                 });
                                               },
                                               child: Text("Reporté"),
@@ -237,7 +237,7 @@ class OrderListState extends State<OrderList> {
     await FlutterPhoneDirectCaller.callNumber(number);
   }
 
-  void orderDelivredPopUP() {
+  void orderDelivredPopUP(Order order,int index) {
     Alert(
       context: context,
       type: AlertType.none,
@@ -249,7 +249,15 @@ class OrderListState extends State<OrderList> {
             "Confirmer",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            setState(() {
+              order.setState("delivered");
+              orders.removeWhere((element) => element.status != 'pending');
+              allOrders.removeWhere((element) => element.status != 'pending');
+              showHide(index);
+            });
+            Navigator.pop(context);
+            },
           color: Colors.lightGreenAccent.shade700,
         ),
         DialogButton(
@@ -268,7 +276,7 @@ class OrderListState extends State<OrderList> {
   }
 
   // Alert Dialog function
-  Future<void> _showReportedDialog(context) async {
+  Future<void> _showReportedDialog(context,Order order,int index ) async {
     // flutter defined function
     return showDialog<void>(
       context: context,
@@ -301,7 +309,15 @@ class OrderListState extends State<OrderList> {
                   Row(
                     children: <Widget>[
                       ElevatedButton(
-                        onPressed: () { Navigator.pop(context);},
+                        onPressed: () {
+                          setState(() {
+                            order.setState("reported");
+                            orders.removeWhere((element) => element.status != 'pending');
+                            allOrders.removeWhere((element) => element.status != 'pending');
+                            showHide(index);
+                          });
+                          Navigator.pop(context);
+                          },
                         child: Text("Sauvegarder"),
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.lightGreenAccent.shade700),

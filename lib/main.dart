@@ -2,6 +2,8 @@ import 'package:delevery_app/home.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
+import 'api/ApiClient.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -32,6 +34,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
   TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  //instance of ApiClient class
+  final ApiClient _apiClient = ApiClient();
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -44,8 +49,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
             children: [
               Container(
                   padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
-                  child: Image.asset('assets/images/logo.png')
-              ),
+                  child: Image.asset('assets/images/logo.png')),
               Container(
                 padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
                 child: TextFormField(
@@ -54,8 +58,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
                       return 'L\'email est requis';
                     } else if (EmailValidator.validate(value) == false) {
                       return 'Format d\'email invalide';
-                    } else if (value != "user@gmail.com") {
-                      return 'Email invalide';
                     }
                     return null;
                   },
@@ -73,8 +75,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Mot de passe requis';
-                    } else if (value != "123456") {
-                      return 'mot de passe erroné';
                     }
                     return null;
                   },
@@ -98,14 +98,27 @@ class _MyLoginPageState extends State<MyLoginPage> {
                       fixedSize: const Size(100, 40),
                     ),
                     child: const Text('Login'),
-                    onPressed: () {
+                    onPressed: () async {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomePage()),
+                        //get response from ApiClient
+                        Map<String, dynamic> res = await _apiClient.login(
+                          nameController.text,
+                          passwordController.text,
                         );
+                        if (res['status'] == true) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HomePage()),
+                          );
+                        } else {
+                          //if an error occurs, show snackbar with error message
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Erreur: ${res['message']}'),
+                            backgroundColor: Colors.red.shade300,
+                          ));
+                        }
                       }
                     },
                   ),

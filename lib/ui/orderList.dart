@@ -326,8 +326,12 @@ class OrderListState extends State<OrderList> {
                   entries.first.duration.toString(),
                   DateTime.fromMillisecondsSinceEpoch(time).toString(),
                   token);
-            } else {
-              _apiClient.saveCallLog(order.id, "0", "not called", token);
+            }else{
+              _apiClient.saveCallLog(
+                  order.id,
+                  "0",
+                  "not called",
+                  token);
             }
             _apiClient.updateStatus(order.id, "delivered", "delivered", token);
 
@@ -405,10 +409,14 @@ class OrderListState extends State<OrderList> {
                                 DateTime.fromMillisecondsSinceEpoch(time)
                                     .toString(),
                                 token);
-                          } else {
-                            _apiClient.saveCallLog(
-                                order.id, "0", "not called", token);
-                          }
+                          }else
+                            {
+                              _apiClient.saveCallLog(
+                                  order.id,
+                                  "0",
+                                  "not called",
+                                  token);
+                            }
                           _apiClient.updateStatus(order.id, "reported",
                               _currentReason.toString(), token);
                           setState(() {

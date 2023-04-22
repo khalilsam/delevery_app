@@ -1,18 +1,82 @@
-import 'package:delevery_app/orderList.dart';
+import 'package:delevery_app/ui/orderList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+import 'NavigationDrawer.dart';
+import '../api/ApiClient.dart';
+
+class HomePage extends StatefulWidget {
+  HomePage({Key? key}) : super(key: key);
+
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final ApiClient _apiClient = ApiClient();
+  int inProgressSize = 0;
+  int deliveredSize = 0;
+  int reportedSize = 0;
+
+  @override
+  initState() {
+    super.initState();
+    getInprogressData();
+    getDeliveredData();
+    getReportedData();
+  }
+
+  void getInprogressData() async {
+    String? token = await ApiClient.getToken('token');
+    Map<String, dynamic> inProgress =
+        await _apiClient.getOrders('in_progress', token);
+    setState(() {
+      inProgressSize = inProgress['orders'].length;
+    });
+  }
+
+  void getDeliveredData() async {
+    String? token = await ApiClient.getToken('token');
+    Map<String, dynamic> delivered =
+        await _apiClient.getOrders('delivered', token);
+    setState(() {
+      deliveredSize = delivered['orders'].length;
+    });
+  }
+
+  void getReportedData() async {
+    String? token = await ApiClient.getToken('token');
+    Map<String, dynamic> reported =
+        await _apiClient.getOrders('reported', token);
+    setState(() {
+      reportedSize = reported['orders'].length;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    //instance of ApiClient class
+
     double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
         backgroundColor: Colors.purple.shade700,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.refresh,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => super.widget));
+            },
+          )
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -33,7 +97,8 @@ class HomePage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OrderList(title: "orders")),
+                              builder: (context) => OrderList(
+                                  status: "in_progress", pending_status: "0")),
                         );
                       },
                       child: Container(
@@ -47,7 +112,7 @@ class HomePage extends StatelessWidget {
                               ListTile(
                                 leading:
                                     Image.asset('assets/images/pending.png'),
-                                title: const Text('19'),
+                                title: Text(inProgressSize.toString()),
                                 subtitle: const Text('Pending'),
                               ),
                             ],
@@ -59,7 +124,8 @@ class HomePage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OrderList(title: "orders")),
+                              builder: (context) => OrderList(
+                                  status: "delivered", pending_status: "1")),
                         );
                       },
                       child: Container(
@@ -72,7 +138,7 @@ class HomePage extends StatelessWidget {
                               ListTile(
                                 leading:
                                     Image.asset('assets/images/success.png'),
-                                title: const Text('9'),
+                                title: Text(deliveredSize.toString()),
                                 subtitle: const Text('Delivered'),
                               ),
                             ],
@@ -84,7 +150,8 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => OrderList(title: "orders")),
+                            builder: (context) => OrderList(
+                                status: "reported", pending_status: "2")),
                       );
                     },
                     child: Container(
@@ -96,7 +163,7 @@ class HomePage extends StatelessWidget {
                           children: <Widget>[
                             ListTile(
                               leading: Image.asset('assets/images/cancel.png'),
-                              title: const Text('9'),
+                              title: Text(reportedSize.toString()),
                               subtitle: const Text('Reported'),
                             ),
                           ],
@@ -105,13 +172,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => OrderList(title: "orders")),
-                      );
-                    },
+                    onTap: () {},
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       child: Card(
@@ -157,92 +218,10 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      drawer: const NavigationDrawer(),
+      drawer: NavigationDrawer(
+          inprogress: inProgressSize,
+          delivered: deliveredSize,
+          reported: reportedSize),
     );
   }
-}
-
-class NavigationDrawer extends StatelessWidget {
-  const NavigationDrawer({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => Drawer(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[buildHeader(context), buildMenuItems(context)],
-          ),
-        ),
-      );
-
-  buildHeader(BuildContext context) => Container(
-        padding: EdgeInsets.only(
-          top: MediaQuery.of(context).padding.top,
-        ),
-      );
-
-  buildMenuItems(BuildContext context) => Column(
-        children: [
-          UserAccountsDrawerHeader(
-            accountName: Text('Khalil Samti'),
-            accountEmail: Text('samti.khalil@gmail.com'),
-            currentAccountPicture: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset('assets/images/logo.png'),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => OrderList(title: "orders")),
-              );
-            },
-            child: ListTile(
-              leading: const Icon(Icons.dashboard),
-              title: const Text('Dashboard'),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => OrderList(title: "orders")),
-              );
-            },
-            child: ListTile(
-              leading: const Icon(Icons.pending),
-              title: const Text('Pending   (30)'),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => OrderList(title: "orders")),
-              );
-            },
-            child: ListTile(
-              leading: const Icon(Icons.check_box),
-              title: const Text('Delivred     (15)'),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => OrderList(title: "orders")),
-              );
-            },
-            child: ListTile(
-              leading: const Icon(Icons.report_off),
-              title: const Text('Reported   (9)'),
-            ),
-          ),
-        ],
-      );
 }

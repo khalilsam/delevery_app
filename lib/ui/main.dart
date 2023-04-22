@@ -1,8 +1,8 @@
-import 'package:delevery_app/home.dart';
+import 'package:delevery_app/ui/home.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
-import 'api/ApiClient.dart';
+import '../api/ApiClient.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,7 +49,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
             children: [
               Container(
                   padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
-                  child: Image.asset('assets/images/logo.png')),
+                  child: Image.asset('assets/images/logo.jpg')),
               Container(
                 padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
                 child: TextFormField(
@@ -107,10 +107,11 @@ class _MyLoginPageState extends State<MyLoginPage> {
                           passwordController.text,
                         );
                         if (res['status'] == true) {
+                          ApiClient.storeToken(res['token']);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const HomePage()),
+                                builder: (context) => HomePage()),
                           );
                         } else {
                           //if an error occurs, show snackbar with error message

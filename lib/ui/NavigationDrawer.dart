@@ -1,5 +1,5 @@
 import 'package:delevery_app/ui/home.dart';
-import 'package:delevery_app/ui/main.dart';
+import 'package:delevery_app/main.dart';
 import 'package:delevery_app/ui/orderList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

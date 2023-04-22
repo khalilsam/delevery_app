@@ -2,7 +2,7 @@ import 'package:delevery_app/ui/home.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
-import '../api/ApiClient.dart';
+import 'api/ApiClient.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,5 +1,4 @@
 import 'package:delevery_app/model/order.dart';
-import 'package:delevery_app/utils/LoadingView.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
@@ -50,15 +49,12 @@ class OrderListState extends State<OrderList> {
     return orderFromJson(response);
   }
 
-  bool _isLoading = true;
 
   @override
   void initState() {
     allOrders.clear();
     orders.clear();
-    _isLoading = true;
     getOrderList(status).then((value) => setState(() {
-          _isLoading = false;
           allOrders.addAll(value);
           orders = allOrders;
           for (int i = 0; i < orders.length; i++) {
@@ -134,7 +130,6 @@ class OrderListState extends State<OrderList> {
                   ? */
                     ListView.builder(
                         itemBuilder: (context, index) {
-                          if (!_isLoading) {
                             return Card(
                               elevation: 2,
                               margin: const EdgeInsets.all(10),
@@ -265,9 +260,6 @@ class OrderListState extends State<OrderList> {
                                 ),
                               ),
                             );
-                          } else {
-                            return LoadingView();
-                          }
                         },
                         itemCount: orders.length)
                 /*:  const Text(
